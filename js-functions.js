@@ -272,6 +272,38 @@ Parse.int = function (input) {
     return typeof input.toInt !== 'undefined' ? input.toInt() : parseInt(input);
 };
 
+ /**
+  * Return the boolean value of the input; has a special case for the strings '0' or 'false',
+  * which will be interpreted as false (whereas non-empty strings are always teated as true)
+  *
+  * @param {varies} input
+  * @return {bool}
+  */
+Parse.bool = function (input) {
+    if (input === '0' || input === 'false') {
+        input = false;
+    }
+    return !!input;
+};
+
+/**
+ * Return a Date object based on the input; if the input is a PHP-providede \DateTime
+ * object (with an embedded 'date' property), we'll use that property for the conversion.
+ *
+ * If the moment.jt library exists, we'll use that to interpret the provided input, else
+ * rely on the Date class
+ *
+ * @param {varies} input
+ * @return {Date}
+ */
+Parse.date = function (input) {
+    input = typeof input !== 'undefined' ? typeof input.date !== 'undefined' ? input.date : input : null;
+    
+    if (typeof moment !== 'undefined') {
+        return moment(input).toDate();
+    } else {
+        return input !== null ? new Date(input) : null;
+    }
+};
  
- 
- 
+/* ==================================================================================================== */
